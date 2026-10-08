@@ -1,0 +1,46 @@
+# 构建上下文里不需要的东西。
+# 忽略得越干净，构建上下文越小、缓存命中率越高。
+# 注意：.dockerignore 的匹配是锚定在构建上下文根目录的（这里是 backend/）。
+
+# Python 运行产物
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.log
+
+# 本地配置：含密钥，且镜像应当只依赖运行时传入的环境变量
+.env
+.env.*
+!.env.example
+
+# 本地数据产物。
+# 排除 data/ 是有意的：示例数据库由 Dockerfile 在构建期用
+# python -m app.agent.database.init_database 生成，不依赖宿主机的文件。
+# 换句话说，在本地跑过服务之后再构建镜像，镜像里也不会混进本地那份数据。
+data/
+
+# 第一版 Streamlit 界面，只作演进留档，不进镜像
+legacy/
+
+# 测试交给 CI 跑，不打进运行镜像
+tests/
+
+# 版本控制、CI 与编辑器
+.git/
+.gitignore
+.github/
+.vscode/
+.idea/
+.DS_Store
+Dockerfile
+.dockerignore

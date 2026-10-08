@@ -1,0 +1,76 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+# 同一分支连续推送时，取消上一次还没跑完的任务，省掉排队时间
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: 后端测试（pytest）
+    runs-on: ubuntu-latest
+
+    # 所有相对路径都以 backend/ 为基准
+    defaults:
+      run:
+        working-directory: backend
+
+    # 【重要】必须显式打开离线模拟模式。
+    # 配置项 LLM_MOCK 在代码里的默认值是 false，是 .env.example 把它写成 true 的；
+    # 而 .env 不入版本控制，CI 里并不存在。不设这个变量，测试会真的去调模型接口，
+    # 结果是拿一个假 Key 打外网，测试全挂。
+    env:
+      LLM_MOCK: "true"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 安装 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
+
+      - name: 安装依赖
+        run: pip install -r requirements.txt
+
+      - name: 初始化示例数据库
+        # data/ecommerce.db 被 .gitignore 排除（见 .gitignore 的说明），
+        # 部分测试依赖它，所以跑测试前必须先建出来
+        run: python -m app.agent.database.init_database
+
+      - name: 运行测试
+        run: python -m pytest tests -q
+
+  frontend:
+    name: 前端类型检查与生产构建
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 安装 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      # 用 npm ci 而不是 npm install：它严格按 lock 文件装，
+      # 能顺带发现"package.json 改了但 lock 没同步"这类问题
+      - name: 安装依赖
+        run: npm ci
+
+      # 这一步同时做类型检查（vue-tsc --noEmit）与打包，
+      # 所以类型错误会让 CI 直接红掉，不会等到部署时才发现
+      - name: 构建
+        run: npm run build

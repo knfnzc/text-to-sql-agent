@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>智能数据分析 Agent · Text-to-SQL</title>
+    <meta
+      name="description"
+      content="用中文提问，自动生成 SQL、安全校验、执行查询、解读结论并生成图表。基于 LangGraph 状态图与自我修正机制。"
+    />
+    <!-- 内联的启动占位：首屏脚本还没下载完时，避免出现整页白屏 -->
+    <style>
+      #app:empty::after {
+        content: '正在加载界面…';
+        display: block;
+        padding: 80px 24px;
+        text-align: center;
+        color: #8b93a7;
+        font-family: system-ui, -apple-system, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

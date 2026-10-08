@@ -1,0 +1,26 @@
+{
+  "name": "text-to-sql-agent-frontend",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "智能数据分析 Agent 的前端工程：Vue 3 + TypeScript + Vite，通过 REST + SSE 与 FastAPI 后端通信",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "build:only": "vite build",
+    "preview": "vite preview --port 4173",
+    "type-check": "vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "dompurify": "^3.2.3",
+    "echarts": "^5.5.1",
+    "marked": "^15.0.6",
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.1",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.7",
+    "vue-tsc": "^2.2.0"
+  }
+}

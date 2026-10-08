@@ -1,0 +1,517 @@
+/* ===============================================================
+   全局样式与设计变量
+   ---------------------------------------------------------------
+   把这部分集中在 style.css 而不是散在各个组件里，是因为颜色、圆角、
+   间距这类东西必须全局一致，散开写迟早会出现三个近似的蓝色。
+   组件内部只写自己特有的布局，通用的卡片、徽标、按钮一律复用这里的类。
+   =============================================================== */
+
+:root {
+  /* 背景与表面 */
+  --bg: #f4f6fb;
+  --surface: #ffffff;
+  --surface-soft: #f8fafc;
+  --surface-sunken: #eef2f8;
+
+  /* 描边与分隔 */
+  --border: #e3e8f0;
+  --border-strong: #cbd5e1;
+
+  /* 文字 */
+  --text: #16202f;
+  --text-secondary: #4a5568;
+  --text-muted: #8894ab;
+
+  /* 主题色 */
+  --accent: #2f6bed;
+  --accent-strong: #1d4ed8;
+  --accent-soft: #eef4ff;
+  --accent-border: #c7dbff;
+
+  /* 语义色 */
+  --ok: #15925a;
+  --ok-soft: #e8f8f0;
+  --warn: #b8730a;
+  --warn-soft: #fdf5e6;
+  --err: #cc3b3b;
+  --err-soft: #fdeeee;
+
+  /* 深色侧栏 */
+  --nav-bg: #131c2e;
+  --nav-bg-soft: #1c2740;
+  --nav-border: #2a3652;
+  --nav-text: #d6deeb;
+  --nav-text-muted: #8b9ab5;
+
+  /* 形状 */
+  --radius-sm: 6px;
+  --radius: 10px;
+  --radius-lg: 14px;
+
+  --shadow-sm: 0 1px 2px rgba(22, 32, 47, 0.05);
+  --shadow: 0 1px 3px rgba(22, 32, 47, 0.07), 0 6px 18px rgba(22, 32, 47, 0.05);
+
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', 'Microsoft YaHei',
+    'PingFang SC', 'Hiragino Sans GB', sans-serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', 'JetBrains Mono', Consolas,
+    'Liberation Mono', Menlo, monospace;
+
+  --sidebar-width: 320px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+#app {
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+a {
+  color: var(--accent);
+}
+
+code,
+pre {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+}
+
+/* ---------------------------------------------------------------
+   通用卡片与标题
+   --------------------------------------------------------------- */
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+}
+
+.card-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.card-body {
+  padding: 16px 18px;
+}
+
+.section-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+}
+
+.hint {
+  color: var(--text-muted);
+  font-size: 12.5px;
+}
+
+/* ---------------------------------------------------------------
+   徽标
+   --------------------------------------------------------------- */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1.7;
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+
+.badge--ok {
+  background: var(--ok-soft);
+  color: var(--ok);
+  border-color: #b9e6cd;
+}
+
+.badge--warn {
+  background: var(--warn-soft);
+  color: var(--warn);
+  border-color: #f2ddb4;
+}
+
+.badge--err {
+  background: var(--err-soft);
+  color: var(--err);
+  border-color: #f5c6c6;
+}
+
+.badge--info {
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  border-color: var(--accent-border);
+}
+
+.badge--muted {
+  background: var(--surface-sunken);
+  color: var(--text-muted);
+  border-color: var(--border);
+}
+
+/* ---------------------------------------------------------------
+   按钮
+   --------------------------------------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 9px 16px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, transform 0.05s;
+}
+
+.btn:hover:not(:disabled) {
+  background: var(--surface-soft);
+  border-color: var(--text-muted);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn--primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.btn--primary:hover:not(:disabled) {
+  background: var(--accent-strong);
+  border-color: var(--accent-strong);
+}
+
+.btn--ghost {
+  border-color: transparent;
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.btn--ghost:hover:not(:disabled) {
+  background: var(--surface-sunken);
+}
+
+.btn--danger {
+  border-color: #f0c2c2;
+  color: var(--err);
+}
+
+.btn--danger:hover:not(:disabled) {
+  background: var(--err-soft);
+}
+
+.btn--block {
+  width: 100%;
+}
+
+.btn--sm {
+  padding: 5px 11px;
+  font-size: 12px;
+}
+
+/* ---------------------------------------------------------------
+   代码块
+   --------------------------------------------------------------- */
+
+.code-block {
+  margin: 0;
+  padding: 14px 16px;
+  background: #0f1729;
+  color: #e2e8f4;
+  border-radius: var(--radius);
+  overflow-x: auto;
+  line-height: 1.75;
+  tab-size: 4;
+}
+
+.code-block--plain {
+  background: var(--surface-sunken);
+  color: var(--text);
+}
+
+/* 极简 SQL 语法高亮：只做关键字与字符串两类，够用且不会因为正则太复杂而误伤 */
+.tok-keyword {
+  color: #7dd3fc;
+  font-weight: 600;
+}
+
+.tok-string {
+  color: #fbbf24;
+}
+
+.tok-number {
+  color: #a5e8b7;
+}
+
+.tok-comment {
+  color: #64748b;
+  font-style: italic;
+}
+
+/* ---------------------------------------------------------------
+   表格
+   --------------------------------------------------------------- */
+
+.table-wrap {
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  max-height: 420px;
+}
+
+table.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+table.data-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--surface-sunken);
+  color: var(--text-secondary);
+  font-weight: 600;
+  text-align: left;
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+table.data-table td {
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+table.data-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+table.data-table tbody tr:hover td {
+  background: var(--surface-soft);
+}
+
+/* ---------------------------------------------------------------
+   空状态与滚动条
+   --------------------------------------------------------------- */
+
+.empty {
+  padding: 22px 16px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13px;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius);
+}
+
+::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c3ccdb;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a7b3c6;
+  background-clip: content-box;
+}
+
+/* ---------------------------------------------------------------
+   Markdown 渲染结果的排版
+   --------------------------------------------------------------- */
+
+.markdown-body {
+  font-size: 13.5px;
+  line-height: 1.8;
+  color: var(--text);
+  word-break: break-word;
+}
+
+.markdown-body > *:first-child {
+  margin-top: 0;
+}
+
+.markdown-body > *:last-child {
+  margin-bottom: 0;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3 {
+  margin: 18px 0 8px;
+  font-size: 14.5px;
+}
+
+.markdown-body p {
+  margin: 0 0 10px;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  margin: 0 0 10px;
+  padding-left: 20px;
+}
+
+.markdown-body li {
+  margin-bottom: 4px;
+}
+
+.markdown-body code {
+  background: var(--surface-sunken);
+  padding: 1px 5px;
+  border-radius: 4px;
+  color: #b3405f;
+}
+
+.markdown-body pre {
+  background: #0f1729;
+  color: #e2e8f4;
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  overflow-x: auto;
+}
+
+.markdown-body pre code {
+  background: none;
+  color: inherit;
+  padding: 0;
+}
+
+.markdown-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 10px 0 14px;
+  font-size: 12.5px;
+}
+
+.markdown-body th,
+.markdown-body td {
+  border: 1px solid var(--border);
+  padding: 6px 10px;
+  text-align: left;
+}
+
+.markdown-body th {
+  background: var(--surface-sunken);
+  font-weight: 600;
+}
+
+.markdown-body blockquote {
+  margin: 10px 0;
+  padding: 2px 0 2px 12px;
+  border-left: 3px solid var(--accent-border);
+  color: var(--text-secondary);
+}
+
+/* ---------------------------------------------------------------
+   动效
+   --------------------------------------------------------------- */
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner {
+  width: 13px;
+  height: 13px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.fade-in {
+  animation: fade-in-up 0.28s ease both;
+}
+
+/* 尊重用户的"减少动态效果"偏好。动画对部分人会引发不适，这不是可选项 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

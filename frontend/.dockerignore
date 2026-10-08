@@ -1,0 +1,27 @@
+# 构建上下文里不需要的东西。
+# node_modules 一定要排除：依赖在镜像内用 npm ci 干净安装，
+# 把宿主机的 node_modules 传进去只会带来平台不一致的问题（比如 Windows 装的包在 Linux 里跑不了）。
+
+node_modules/
+dist/
+dist-ssr/
+.vite/
+*.tsbuildinfo
+
+# 本地环境变量（Vite 变量走 build args 注入）
+.env
+.env.*
+!.env.example
+
+*.log
+
+# 版本控制、CI 与编辑器
+.git/
+.gitignore
+.github/
+.vscode/
+.idea/
+.DS_Store
+Dockerfile
+.dockerignore
+README.md

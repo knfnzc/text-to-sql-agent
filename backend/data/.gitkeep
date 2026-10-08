@@ -1,0 +1,7 @@
+# 本目录存放运行时生成的数据，内容不入版本控制。
+#
+# data/ecommerce.db  —— 示例数据库，执行下面的命令生成（在 backend/ 目录下）：
+#     python -m app.agent.database.init_database
+#
+# data/chroma/       —— Schema 向量索引，服务启动时自动构建
+#                       （app/main.py 的 lifespan，构建失败不阻断启动）

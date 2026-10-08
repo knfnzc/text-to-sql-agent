@@ -1,0 +1,63 @@
+# 本地一键起前后端：
+#
+#     docker compose up --build
+#
+# 然后打开 http://localhost:8080
+#
+# 默认是离线模拟模式（LLM_MOCK=true），不需要任何密钥，
+# 界面上能看到完整的六步执行过程与真实跑出来的查询结果。
+#
+# 要连真实模型，用 shell 环境变量覆盖即可：
+#     LLM_MOCK=false LLM_API_KEY=sk-xxx LLM_BASE_URL=https://api.deepseek.com/v1 \
+#       docker compose up --build
+#
+# 端口占用说明：后端占宿主机 8000、前端占 8080。
+# 如果同时跑着姊妹项目（它用 8000/8001），改下面的端口映射即可。
+
+services:
+  backend:
+    build: ./backend
+    image: text-to-sql-agent-backend
+    ports:
+      - "8000:8000"
+    environment:
+      # 默认离线模拟。这里显式写出来是为了让"能零密钥跑通"这件事在配置里看得见
+      LLM_MOCK: "${LLM_MOCK:-true}"
+      LLM_API_KEY: "${LLM_API_KEY:-}"
+      LLM_BASE_URL: "${LLM_BASE_URL:-https://api.openai.com/v1}"
+      LLM_MODEL: "${LLM_MODEL:-gpt-4o-mini}"
+      # DeepSeek V4 默认开启思考模式，会导致结构化输出报 400，接它必须设为 true
+      LLM_DISABLE_THINKING: "${LLM_DISABLE_THINKING:-false}"
+      # 结构化输出实现方式。DeepSeek 不支持 json_schema，必须走 function_calling
+      LLM_STRUCTURED_METHOD: "${LLM_STRUCTURED_METHOD:-function_calling}"
+      # 向量化单独留在离线替身：DeepSeek 没有 embedding 接口，
+      # 若跟着 LLM_MOCK 一起切真实，Schema 检索环节会整条链路失败
+      EMBEDDING_MOCK: "${EMBEDDING_MOCK:-false}"
+      # 前端由 nginx 托管在 8080，浏览器直连后端属于跨域，必须放行；
+      # 不放行的话接口能通、但浏览器会拦掉响应，且报错信息看起来像后端没起
+      CORS_ORIGINS: "http://localhost:8080,http://127.0.0.1:8080"
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health', timeout=4)"
+      interval: 30s
+      timeout: 5s
+      start_period: 40s
+      retries: 3
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        # Vite 的变量在构建期就写进产物了，所以这里必须用 build args，
+        # 写成 environment 是没用的——那份配置在浏览器端根本读不到
+        VITE_DEMO: "false"
+        VITE_API_BASE: "http://localhost:8000/api"
+    image: text-to-sql-agent-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      backend:
+        condition: service_started
